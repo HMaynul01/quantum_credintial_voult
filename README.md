@@ -1,128 +1,87 @@
+# Quantum Authentication Vault (QAV) v8.0
 
-# Quantum Authentication Vault (QAV) v6.0
-
-**Classification:** RESTRICTED | PROPRIETARY  
-**System Version:** 6.0.0 (Neon Horizon)  
-**Architecture:** Zero-Knowledge | Client-Side Encryption  
+**Architecture:** Vite + React (TypeScript) | Netlify Serverless Functions | Zero-Knowledge Encryption
 
 ---
 
-## 1. Executive Summary
+## 1. Overview
 
-Quantum Authentication Vault (QAV) is a high-assurance, military-grade credential management system designed for the post-password era. It leverages **AES-256-GCM** encryption, **Hardware Key (FIDO2)** integration, and **Generative AI** for document analysis. Built on a zero-knowledge architecture, QAV ensures that encryption keys never leave the client device in unencrypted form.
+Quantum Authentication Vault (QAV) is a high-assurance credential management system leveraging **AES-256-GCM** client-side encryption. This version is architected for secure, scalable deployment on serverless platforms like Netlify.
 
-## 2. Core Features
+All sensitive operations, including database queries and AI interactions, are proxied through secure Netlify Functions, ensuring no API keys or database credentials are ever exposed to the client.
 
-### 2.1 Security Enclave
-*   **Zero-Knowledge Proof:** Data is encrypted/decrypted locally using a key derived from the Master PIN (`PBKDF2` + `AES-GCM`).
-*   **Multi-Factor Authentication (MFA):** Supports YubiKey, FaceID/TouchID (WebAuthn), and PIN-based auth.
-*   **Secure Recovery:** Proprietary recovery protocol using encrypted security answers to restore Master Keys without server intervention.
-*   **Clipboard Protection:** Ephemeral clipboard access with auto-clear and blocking capabilities.
+## 2. Tech Stack
 
-### 2.2 Identity Management
-*   **Vault Item Types:** Passwords, ID Cards, X.509 Certificates, Bank Cards, Secure Notes.
-*   **AI-Powered OCR:** Integrated Google Gemini 2.5 Flash for analyzing and extracting data from physical ID cards and QR codes.
-*   **Certificate Engine:** Built-in PKI tools to generate self-signed RSA-2048 certificates and monitor expiration.
-
-### 2.3 Connectivity & Portability
-*   **Secure P2P Sharing:** Ephemeral, time-limited QR codes with AES-GCM payload encryption for device-to-device credential transfer.
-*   **Cloud Sync:** Encrypted synchronization with Google Drive, OneDrive, and Dropbox (Architecture Ready).
-*   **Interoperability:** Import/Export support for JSON, CSV, encrypted PDF, and XLSX.
-
-### 2.4 User Experience (UX)
-*   **Theme Engine:** Dynamic CSS variable injection supporting Deep Cyan, Electric Purple, and custom gradient themes.
-*   **Visualization:** Real-time cryptographic health gauges, radar charts, and activity graphs.
+- **Frontend:** React 19 (TypeScript), Vite, Tailwind CSS
+- **Backend:** Netlify Functions (TypeScript)
+- **Database:** NeonDB (PostgreSQL Serverless)
+- **AI Engine:** Google Gemini
+- **Cryptography:** Web Crypto API (AES-GCM, PBKDF2), `node-forge` (RSA)
 
 ---
 
-## 3. System Architecture
-
-### 3.1 Frontend Layer
-*   **Framework:** React 19 (TypeScript)
-*   **State Management:** React Hooks + Context-less Prop Drilling for security isolation.
-*   **UI Library:** Tailwind CSS with custom `Neon` utility classes and GPU-accelerated animations.
-
-### 3.2 Cryptographic Layer (`/services/cryptoService.ts`)
-*   **Algorithm:** AES-GCM (256-bit)
-*   **Key Derivation:** PBKDF2 (SHA-256, 100,000 Iterations)
-*   **Randomness:** `window.crypto.getRandomValues` (CSPRNG)
-*   **PKI:** `node-forge` for RSA key generation and X.509 signing.
-
-### 3.3 Data Layer (`/services/db.ts`)
-*   **Primary Storage:** NeonDB (PostgreSQL) via Serverless Driver.
-*   **Schema:**
-    *   `users`: User profile metadata (Public).
-    *   `vaults`: Encrypted binary blobs (Private).
-    *   `user_configs`: Application preferences (Non-sensitive).
-*   **Offline Strategy:** LocalStorage fallback with encrypted indices.
-
-### 3.4 Intelligence Layer (`/services/geminiService.ts`)
-*   **Model:** `gemini-2.5-flash-image`
-*   **Function:** Image classification, text extraction, and security analysis.
-
----
-
-## 4. Module Description
-
-| Module | Function |
-| :--- | :--- |
-| **Auth Core** | Handles Login, Registration, PIN Hashing, and Biometric Challenges. |
-| **Vault Engine** | Manages CRUD operations, Client-side Decryption, and Search Filtering. |
-| **Creator Panel** | Admin interface for Theme customization, App branding, and User management. |
-| **Import/Export** | Parsing engine for CSV/XLSX and PDF generation (jspdf). |
-| **P2P Node** | Generates and scans encrypted QR codes for secure sharing. |
-
----
-
-## 5. Developer Manual
+## 3. Local Development
 
 ### Prerequisites
-*   Node.js v18+
-*   NeonDB Connection String
-*   Google Gemini API Key
+- Node.js v18+
+- Netlify CLI (`npm install -g netlify-cli`)
 
-### Installation
-1.  Clone the repository.
-2.  Install dependencies:
+### Setup
+1.  **Install Dependencies:**
     ```bash
     npm install
     ```
-3.  Configure Environment:
-    *   Set `API_KEY` in process environment or inject via build tools.
-
-### Running Development Server
-```bash
-npm start
-```
-*Access via `http://localhost:3000`*
-
-### Building for Production
-```bash
-npm run build
-```
-
-### Desktop Packaging (Electron)
-```bash
-# Terminal 1
-npm start
-# Terminal 2
-electron .
-```
+2.  **Configure Environment:**
+    - Create a `.env` file in the root directory.
+    - Add your secret keys:
+      ```
+      VITE_GEMINI_API_KEY="your_gemini_api_key"
+      DATABASE_URL="your_neondb_connection_string"
+      ```
+3.  **Run Development Server:**
+    The Netlify CLI will run your Vite server and the serverless functions simultaneously.
+    ```bash
+    netlify dev
+    ```
+    The application will be available at `http://localhost:8888`.
 
 ---
 
-## 6. License & Legal
+## 4. Deployment to Netlify
 
-**LICENSE: PROPRIETARY / CLOSED SOURCE**
+1.  **Connect Your Git Repository:**
+    - Link your GitHub/GitLab repository to a new site in the Netlify dashboard.
 
-Copyright © 2024 Mohammad Maynul Hasan. All Rights Reserved.
+2.  **Configure Build Settings:**
+    - **Build command:** `npm run build`
+    - **Publish directory:** `dist`
+    - The `netlify.toml` file in this repository will automatically configure the serverless functions.
 
-Unauthorized copying, modification, distribution, or use of this software, via any medium, is strictly prohibited. This software is proprietary to the copyright holder.
+3.  **Add Environment Variables:**
+    - In your Netlify site's "Site configuration" > "Build & deploy" > "Environment" section, add the same `VITE_GEMINI_API_KEY` and `DATABASE_URL` variables.
 
-*   **Commercial Use:** Requires a specific commercial license agreement.
-*   **Private Use:** Granted only to authorized personnel.
-*   **Warranty:** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+4.  **Deploy:**
+    - Trigger a new deploy from the Netlify UI or by pushing to your main branch.
 
 ---
 
-**Contact:** eayneural@gmail.com
+## 5. Project Structure
+
+```
+/
+├── netlify/
+│   └── functions/        # Serverless backend functions
+│       ├── db.ts
+│       └── gemini.ts
+├── public/               # Static assets
+├── src/                  # Frontend source code
+│   ├── components/
+│   ├── contexts/
+│   ├── hooks/
+│   ├── services/
+│   ├── types/
+│   ├── App.tsx
+│   └── index.tsx
+├── netlify.toml          # Netlify deployment config
+└── vite.config.ts        # Vite build config
+```
