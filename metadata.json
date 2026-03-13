@@ -1,6 +1,6 @@
 {
-  "name": "Quantum Authentication Vault (QAV)",
-  "description": "A high-security, military-grade encrypted vault for managing identities, certificates, and authentication data with AI-powered features.",
+  "name": "NORI KSA Hospital Users App",
+  "description": "Mobile fast hospital users app with deep dark cyan gradient theme, offline local storage, and hidden admin panel for managing bills, invoices, test reports, appointments, and prescriptions.",
   "requestFramePermissions": [
     "camera",
     "microphone",

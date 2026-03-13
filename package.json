@@ -9,9 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "^1.40.0",
+    "@google/genai": "^1.45.0",
     "@neondatabase/serverless": "^0.9.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "clsx": "^2.1.1",
     "docx": "^8.5.0",
+    "idb": "^8.0.3",
     "jspdf": "^2.5.1",
     "jsqr": "^1.4.0",
     "lucide-react": "^0.563.0",
@@ -19,6 +22,9 @@
     "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.13.1",
+    "tailwind-merge": "^3.5.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
